@@ -8,3 +8,6 @@ public abstract class CalculadoraException(string mensagem) : Exception(mensagem
 
 public sealed class DivisaoPorZeroException()
     : CalculadoraException("Não é possível dividir por zero.");
+
+public sealed class ExpressaoInvalidaException(string expressao)
+    : CalculadoraException($"Expressão inválida: '{expressao}'. Use o formato <número> <operador> <número>, ex.: 2 + 3.");
