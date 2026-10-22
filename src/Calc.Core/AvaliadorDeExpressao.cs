@@ -4,26 +4,42 @@ using Calc.Core.Excecoes;
 
 namespace Calc.Core;
 
-public class AvaliadorDeExpressao(Calculadora calculadora)
+/// <summary>
+/// Avalia expressões simples no formato "&lt;número&gt; &lt;operador&gt; &lt;número&gt;".
+/// Números usam ponto como separador decimal (ex.: 1.5). Operadores: + - * /
+/// </summary>
+public sealed partial class AvaliadorDeExpressao
 {
-    private readonly Calculadora _calculadora = calculadora;
+    private readonly IReadOnlyDictionary<char, Func<decimal, decimal, decimal>> _operacoes;
+
+    public AvaliadorDeExpressao(Calculadora calculadora)
+    {
+        _operacoes = new Dictionary<char, Func<decimal, decimal, decimal>>
+        {
+            ['+'] = calculadora.Somar,
+            ['-'] = calculadora.Subtrair,
+            ['*'] = calculadora.Multiplicar,
+            ['/'] = calculadora.Dividir,
+        };
+    }
 
     public decimal Avaliar(string expressao)
     {
-        var match = Regex.Match(expressao, @"^\s*(-?\d+(\.\d+)?)\s*([+\-*/])\s*(-?\d+(\.\d+)?)\s*$");
+        var match = PadraoDaExpressao().Match(expressao);
         if (!match.Success)
             throw new ExpressaoInvalidaException(expressao);
 
-        var a = decimal.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
-        var b = decimal.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture);
+        var a = LerNumero(match, "a");
+        var operador = match.Groups["op"].Value[0];
+        var b = LerNumero(match, "b");
 
-        switch (match.Groups[3].Value)
-        {
-            case "+": return _calculadora.Somar(a, b);
-            case "-": return _calculadora.Subtrair(a, b);
-            case "*": return _calculadora.Multiplicar(a, b);
-            case "/": return _calculadora.Dividir(a, b);
-            default: throw new ExpressaoInvalidaException(expressao);
-        }
+        return _operacoes[operador](a, b);
     }
+
+    private static decimal LerNumero(Match match, string grupo) =>
+        decimal.Parse(match.Groups[grupo].Value, CultureInfo.InvariantCulture);
+
+    // Gerada em tempo de compilação (source generator): mais rápida e validada no build.
+    [GeneratedRegex(@"^\s*(?<a>-?\d+(\.\d+)?)\s*(?<op>[+\-*/])\s*(?<b>-?\d+(\.\d+)?)\s*$")]
+    private static partial Regex PadraoDaExpressao();
 }
