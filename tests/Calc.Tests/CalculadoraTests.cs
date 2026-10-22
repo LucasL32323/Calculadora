@@ -1,4 +1,5 @@
 using Calc.Core;
+using Calc.Core.Excecoes;
 
 namespace Calc.Tests;
 
@@ -73,5 +74,13 @@ public class CalculadoraTests
         var resultado = _calculadora.Dividir(dividendo, divisor);
 
         Assert.Equal(esperado, resultado);
+    }
+
+    [Fact]
+    public void Dividir_PorZero_LancaDivisaoPorZeroExceptionComMensagemAmigavel()
+    {
+        var excecao = Assert.Throws<DivisaoPorZeroException>(() => _calculadora.Dividir(10m, 0m));
+
+        Assert.Equal("Não é possível dividir por zero.", excecao.Message);
     }
 }
