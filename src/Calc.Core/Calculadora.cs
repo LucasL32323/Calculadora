@@ -1,3 +1,5 @@
+using Calc.Core.Excecoes;
+
 namespace Calc.Core;
 
 public class Calculadora
@@ -8,5 +10,11 @@ public class Calculadora
 
     public decimal Multiplicar(decimal a, decimal b) => a * b;
 
-    public decimal Dividir(decimal dividendo, decimal divisor) => dividendo / divisor;
+    public decimal Dividir(decimal dividendo, decimal divisor)
+    {
+        if (divisor == 0)
+            throw new DivisaoPorZeroException();
+
+        return dividendo / divisor;
+    }
 }
