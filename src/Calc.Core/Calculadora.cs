@@ -17,4 +17,16 @@ public class Calculadora
 
         return dividendo / divisor;
     }
+
+    /// <summary>
+    /// Módulo matemático: o resultado tem o mesmo sinal do divisor
+    /// (ex.: -7 mod 3 = 2). O operador % do C# devolve o resto, que daria -1.
+    /// </summary>
+    public decimal Modulo(decimal a, decimal b)
+    {
+        if (b == 0)
+            throw new DivisaoPorZeroException();
+
+        return ((a % b) + b) % b;
+    }
 }

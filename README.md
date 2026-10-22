@@ -1,15 +1,9 @@
-# TDD Dojo · Dia 01 — Calculadora
+# Calculadora
 
 [![CI](https://github.com/LucasL32323/Calculadora/actions/workflows/ci.yml/badge.svg)](https://github.com/LucasL32323/Calculadora/actions/workflows/ci.yml)
 
-> Série **TDD Dojo**: um projeto C# por dia útil, do simples ao complexo, sempre guiado por testes.
-> Hoje: **Dia 01 de 25** · Fase 1 — Fundamentos · Stack: **.NET 10 (LTS)**, **C# 14**, **xUnit**.
-
-## 🎯 Objetivo do dia
-
-Construir uma calculadora com as 4 operações e um avaliador de expressões em texto (`"2 + 3"`),
-**escrevendo cada teste antes do código**. O foco não é a calculadora — é internalizar o ritmo
-Red → Green → Refactor e aprender a ler o histórico de commits como uma narrativa de design.
+Calculadora em **C# / .NET 10** com as operações `+ - * / %` e um avaliador de expressões em texto (`"2 + 3"`),
+desenvolvida com **TDD** (testes escritos antes do código) e testes em **xUnit**.
 
 ## 🔁 O ciclo Red-Green-Refactor
 
@@ -23,7 +17,7 @@ Red → Green → Refactor e aprender a ler o histórico de commits como uma nar
 método inexistente nem compila. Compilar já é um "red" válido, mas o stub deixa o red mais
 honesto: o projeto compila e o teste falha na execução, mostrando exatamente qual comportamento falta.
 
-### O histórico deste repo é a aula
+### O histórico de commits
 
 Rode `git log --reverse --oneline` e acompanhe:
 
@@ -71,16 +65,17 @@ Calc.Cli ──► Calc.Core ◄── Calc.Tests
 ```
 
 O **Core não conhece a interface**. A CLI poderia virar API, app desktop ou bot sem tocar numa
-linha de regra de negócio — e os testes continuariam valendo. Essa separação é a semente da
-Clean Architecture que vamos usar nos dias finais (pizzaria).
+linha de regra de negócio — e os testes continuariam valendo. Essa separação é a base da
+Clean Architecture.
 
 ## 📏 Regras de negócio
 
-1. Somar, subtrair, multiplicar e dividir dois números `decimal`.
-2. Dividir por zero lança `DivisaoPorZeroException` ("Não é possível dividir por zero.").
-3. Expressões no formato `<número> <operador> <número>`; espaços opcionais; ponto como decimal; operandos podem ser negativos.
-4. Expressão fora do formato lança `ExpressaoInvalidaException`.
-5. Todos os erros de regra herdam de `CalculadoraException`, então a CLI captura um tipo só.
+1. Somar, subtrair, multiplicar, dividir e calcular o módulo (`%`) de dois números `decimal`.
+2. Dividir ou calcular módulo por zero lança `DivisaoPorZeroException` ("Não é possível dividir por zero.").
+3. O módulo é matemático: o resultado tem o sinal do divisor (`-7 % 3 = 2`, enquanto o `%` puro do C# daria `-1`).
+4. Expressões no formato `<número> <operador> <número>`; espaços opcionais; ponto como decimal; operandos podem ser negativos. Operadores: `+ - * / %`.
+5. Expressão fora do formato lança `ExpressaoInvalidaException`.
+6. Todos os erros de regra herdam de `CalculadoraException`, então a CLI captura um tipo só.
 
 ## 🧠 Decisões técnicas (nível sênior)
 
@@ -111,24 +106,3 @@ dotnet run --project src/Calc.Cli    # abre a calculadora
 > 10 / 0
 Erro: Não é possível dividir por zero.
 ```
-
-**Pra praticar de verdade:** volte ao commit `d5e7caa` (`git checkout d5e7caa`), apague a
-implementação e refaça o caminho sozinho, um teste por vez.
-
-## 🏋️ Desafios extras (faça com TDD!)
-
-1. Aceitar vírgula como separador decimal (`"1,5 + 2"`).
-2. Operação de potência `^` e de resto `%`.
-3. Tratar `OverflowException` (ex.: `79228162514264337593543950335 + 1`) como erro de domínio.
-4. Histórico das últimas 5 operações (`Historico` na Calculadora).
-5. **Boss fight:** expressões com várias operações e precedência (`2 + 3 * 4 = 14`).
-
-## 🗺️ Roadmap do TDD Dojo
-
-| Fase | Dias | Projetos |
-|---|---|---|
-| 1 · Fundamentos | 01–05 | Calculadora · Conversor de unidades · Validador de CPF/CNPJ · Números romanos · String Calculator |
-| 2 · Domínio e OO | 06–10 | Conta bancária · Carrinho com cupons · Biblioteca com multas (`TimeProvider`) · Estacionamento · Jogo da velha |
-| 3 · Dublês e arquitetura | 11–15 | Agenda com repositório · Notificações com mocks · Reserva de assentos · To-do em Clean Architecture · Result pattern + validação |
-| 4 · Web API e dados | 16–20 | Minimal API + testes de integração · EF Core · Autenticação JWT · Paginação e ProblemDetails · Sistema de pedidos |
-| 5 · Projeto final: Pizzaria | 21–25 | Cardápio e preços · Estoque de ingredientes · Pedidos e status · API + banco · Relatórios de vendas e alertas de estoque |

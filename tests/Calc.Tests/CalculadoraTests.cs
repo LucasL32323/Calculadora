@@ -76,6 +76,29 @@ public class CalculadoraTests
         Assert.Equal(esperado, resultado);
     }
 
+    public static TheoryData<decimal, decimal, decimal> CasosDeModulo => new()
+    {
+        { 6m, 3m, 0m },    // divisão exata
+        { 9m, 5m, 4m },
+        { 7.5m, 2m, 1.5m },
+        { -7m, 3m, 2m },   // módulo matemático: o operador % do C# daria -1
+    };
+
+    [Theory]
+    [MemberData(nameof(CasosDeModulo))]
+    public void Modulo_DoisNumeros_RetornaOModuloMatematico(decimal a, decimal b, decimal esperado)
+    {
+        var resultado = _calculadora.Modulo(a, b);
+
+        Assert.Equal(esperado, resultado);
+    }
+
+    [Fact]
+    public void Modulo_PorZero_LancaDivisaoPorZeroException()
+    {
+        Assert.Throws<DivisaoPorZeroException>(() => _calculadora.Modulo(10m, 0m));
+    }
+
     [Fact]
     public void Dividir_PorZero_LancaDivisaoPorZeroExceptionComMensagemAmigavel()
     {

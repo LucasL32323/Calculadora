@@ -6,7 +6,7 @@ namespace Calc.Core;
 
 /// <summary>
 /// Avalia expressões simples no formato "&lt;número&gt; &lt;operador&gt; &lt;número&gt;".
-/// Números usam ponto como separador decimal (ex.: 1.5). Operadores: + - * /
+/// Números usam ponto como separador decimal (ex.: 1.5). Operadores: + - * / %
 /// </summary>
 public sealed partial class AvaliadorDeExpressao
 {
@@ -20,6 +20,7 @@ public sealed partial class AvaliadorDeExpressao
             ['-'] = calculadora.Subtrair,
             ['*'] = calculadora.Multiplicar,
             ['/'] = calculadora.Dividir,
+            ['%'] = calculadora.Modulo,
         };
     }
 
@@ -40,6 +41,6 @@ public sealed partial class AvaliadorDeExpressao
         decimal.Parse(match.Groups[grupo].Value, CultureInfo.InvariantCulture);
 
     // Gerada em tempo de compilação (source generator): mais rápida e validada no build.
-    [GeneratedRegex(@"^\s*(?<a>-?\d+(\.\d+)?)\s*(?<op>[+\-*/])\s*(?<b>-?\d+(\.\d+)?)\s*$")]
+    [GeneratedRegex(@"^\s*(?<a>-?\d+(\.\d+)?)\s*(?<op>[+\-*/%])\s*(?<b>-?\d+(\.\d+)?)\s*$")]
     private static partial Regex PadraoDaExpressao();
 }

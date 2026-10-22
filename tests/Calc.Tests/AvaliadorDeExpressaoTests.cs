@@ -17,6 +17,9 @@ public class AvaliadorDeExpressaoTests
         { "  1.5 * 2  ", 3m },  // espaços nas pontas e decimal com ponto
         { "-5 + 2", -3m },      // primeiro operando negativo
         { "5 - -2", 7m },       // segundo operando negativo
+        { "9 % 5", 4m },        // módulo
+        { "6 % 3", 0m },
+        { "-7 % 3", 2m },
     };
 
     [Theory]
@@ -46,5 +49,11 @@ public class AvaliadorDeExpressaoTests
     public void Avaliar_DivisaoPorZero_PropagaDivisaoPorZeroException()
     {
         Assert.Throws<DivisaoPorZeroException>(() => _avaliador.Avaliar("10 / 0"));
+    }
+
+    [Fact]
+    public void Avaliar_ModuloPorZero_PropagaDivisaoPorZeroException()
+    {
+        Assert.Throws<DivisaoPorZeroException>(() => _avaliador.Avaliar("10 % 0"));
     }
 }
